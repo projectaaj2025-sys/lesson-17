@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест — Академическая грамотность</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #f0f7ff;
+  --surface: #ffffff;
+  --surface-hover: #f8fbff;
+  --primary: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-glow: #dbeafe;
+  --accent: #0ea5e9;
+  --accent-light: #e0f2fe;
+  --success: #10b981;
+  --success-light: #d1fae5;
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --text: #1e293b;
+  --text-dim: #64748b;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(37,99,235,0.08);
+  --shadow-lg: 0 4px 6px rgba(0,0,0,0.04), 0 12px 32px rgba(37,99,235,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+/* ===== HEADER ===== */
+header { text-align: center; padding: 48px 0 32px; }
+header h1 { font-size: 2.4rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+header p { color: var(--text-dim); font-size: 1.1rem; }
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  padding: 32px; margin-bottom: 20px; box-shadow: var(--shadow);
+}
+.card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; color: var(--text); }
+.card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; color: var(--primary); }
+
+/* ===== INPUTS ===== */
+input, select, textarea {
+  width: 100%; padding: 14px 18px; margin-bottom: 14px;
+  background: var(--surface); border: 2px solid var(--border); border-radius: 14px;
+  color: var(--text); font-size: 16px; font-family: inherit; transition: all .2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 4px var(--primary-glow);
+}
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
+textarea { min-height: 100px; resize: vertical; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 28px; border: none; border-radius: 14px; font-size: 16px;
+  font-weight: 600; font-family: inherit; cursor: pointer; transition: all .2s ease;
+  text-decoration: none; -webkit-appearance: none; appearance: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff;
+  width: 100%; box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.4); }
+.btn-secondary {
+  background: var(--surface); color: var(--text-dim); border: 2px solid var(--border);
+}
+.btn-secondary:hover { background: var(--surface-hover); border-color: var(--primary-light); color: var(--primary); }
+.btn-teacher {
+  position: fixed; bottom: 24px; right: 24px; z-index: 100;
+  background: var(--surface); border: 2px solid var(--border); color: var(--text-dim);
+  padding: 12px 20px; border-radius: 50px; font-size: 14px; font-weight: 500;
+  font-family: inherit; cursor: pointer; transition: all .2s; box-shadow: var(--shadow-lg);
+}
+.btn-teacher:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+
+/* ===== SCREENS ===== */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn .4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== INFO BAR ===== */
+.info-bar {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+  padding: 16px 24px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; box-shadow: var(--shadow);
+}
+.variant-badge {
+  display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 13px;
+}
+.v1 { background: var(--success-light); color: #047857; }
+.v2 { background: var(--warning-light); color: #b45309; }
+.v3 { background: var(--danger-light); color: #b91c1c; }
+
+/* ===== TASK ===== */
+.task { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border-light); }
+.task:last-child { border-bottom: none; }
+.task-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+.task-num {
+  width: 40px; height: 40px; min-width: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff;
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px;
+}
+.task-type { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+/* ===== MATCHING: Drag-drop columns ===== */
+.matching-game {
+  display: grid; grid-template-columns: 1fr 50px 1fr; gap: 16px; align-items: start;
+}
+.match-col { display: flex; flex-direction: column; gap: 10px; }
+.match-item {
+  background: var(--surface); border: 2px solid var(--border); border-radius: 14px;
+  padding: 14px 16px; cursor: grab; transition: all .2s; font-size: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.match-item:hover { border-color: var(--primary-light); box-shadow: 0 4px 12px rgba(37,99,235,0.1); }
+.match-item.dragging { opacity: .6; transform: scale(1.03); cursor: grabbing; }
+.match-item.placed { background: var(--primary-glow); border-color: var(--primary); color: var(--primary); }
+.match-dropzone {
+  background: var(--border-light); border: 2px dashed var(--border); border-radius: 14px;
+  padding: 14px 16px; min-height: 50px; display: flex; align-items: center; transition: all .2s; font-size: 14px;
+}
+.match-dropzone.drag-over { border-color: var(--primary); background: var(--primary-glow); }
+.match-dropzone.filled { border-style: solid; border-color: var(--primary); background: var(--primary-glow); }
+.match-dropzone .drop-label { color: var(--text-muted); font-size: 13px; }
+.match-dropzone .drop-value { color: var(--primary); font-weight: 600; }
+.match-arrows { display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; padding-top: 8px; }
+.arrow-box { width: 40px; height: 50px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 20px; }
+
+/* ===== BUCKETS ===== */
+.buckets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+.bucket {
+  background: var(--border-light); border: 2px dashed var(--border); border-radius: 16px;
+  padding: 16px; min-height: 140px; transition: all .2s;
+}
+.bucket.drag-over { border-color: var(--accent); background: var(--accent-light); }
+.bucket-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-weight: 700; font-size: 14px; color: var(--accent); }
+.bucket-items { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+.source-items {
+  display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; padding: 16px;
+  background: var(--border-light); border-radius: 14px; border: 1px solid var(--border);
+}
+.bucket-item {
+  background: var(--surface); border: 1px solid var(--border); padding: 8px 14px;
+  border-radius: 10px; font-size: 13px; cursor: grab; transition: all .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.bucket-item:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(14,165,233,0.1); }
+.bucket-item.dragging { opacity: .5; }
+
+/* ===== CLOZE ===== */
+.cloze-text { font-size: 16px; line-height: 2.6; color: var(--text-dim); }
+.cloze-text strong { color: var(--text); }
+.cloze-select {
+  display: inline-block; padding: 6px 14px; margin: 0 4px;
+  background: var(--surface); border: 2px solid var(--border); border-radius: 10px;
+  color: var(--text); font-size: 15px; font-weight: 500; cursor: pointer; min-width: 160px; font-family: inherit; transition: all .2s;
+}
+.cloze-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+.cloze-select.correct { border-color: var(--success); color: var(--success); background: var(--success-light); }
+.cloze-select.wrong { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+.word-bank {
+  margin-top: 16px; padding: 14px 18px;
+  background: linear-gradient(135deg, var(--primary-glow), var(--accent-light));
+  border-radius: 14px; border: 1px solid var(--border);
+}
+.word-bank-title { font-weight: 600; margin-bottom: 10px; color: var(--primary); font-size: 13px; }
+.word-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.word-chip {
+  padding: 6px 14px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; font-size: 13px; color: var(--text-dim); transition: all .2s;
+}
+.word-chip:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ===== TEXT COMPARISON (plagiarism) ===== */
+.compare-box {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;
+}
+.compare-block {
+  background: var(--border-light); border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px; font-size: 14px; line-height: 1.7;
+}
+.compare-block .label { font-weight: 600; color: var(--primary); margin-bottom: 8px; font-size: 12px; text-transform: uppercase; }
+.compare-block.source { border-left: 4px solid var(--primary); }
+.compare-block.student { border-left: 4px solid var(--warning); }
+
+/* ===== RESULTS ===== */
+.result-card { text-align: center; }
+.score-ring {
+  width: 180px; height: 180px; margin: 24px auto; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--surface); border: 4px solid var(--border); position: relative;
+}
+.score-ring::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  background: conic-gradient(var(--primary) var(--pct), transparent 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+}
+.score-num { font-size: 48px; font-weight: 800; color: var(--text); position: relative; z-index: 1; }
+.score-label { font-size: 13px; color: var(--text-muted); position: relative; z-index: 1; }
+.task-result {
+  text-align: left; padding: 14px 18px; margin: 8px 0;
+  background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
+}
+.task-result.ok { border-left: 4px solid var(--success); }
+.task-result.err { border-left: 4px solid var(--danger); }
+.task-result-title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.task-result-err { color: var(--danger); font-size: 13px; margin-top: 6px; line-height: 1.6; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(30,41,59,0.5);
+  backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.active { display: flex; animation: fadeIn .2s ease; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+  width: 100%; max-width: 420px; padding: 32px; box-shadow: var(--shadow-lg);
+}
+.modal h2 { margin-bottom: 20px; font-size: 1.3rem; }
+
+.hint { color: var(--text-muted); font-size: 14px; margin-top: 16px; text-align: center; }
+
+@media(max-width: 640px) {
+  .container { padding: 16px; }
+  header h1 { font-size: 1.8rem; }
+  .matching-game { grid-template-columns: 1fr; }
+  .match-arrows { display: none; }
+  .buckets-grid { grid-template-columns: 1fr; }
+  .compare-box { grid-template-columns: 1fr; }
+  .btn-teacher { bottom: 16px; right: 16px; padding: 10px 16px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>📚 Академическая грамотность</h1>
+    <p>Урок 17. Проверочная работа</p>
+  </header>
+
+  <!-- LOGIN -->
+  <div id="login-screen" class="screen active">
+    <div class="card">
+      <h2>👋 Добро пожаловать</h2>
+      <input type="text" id="student-name" placeholder="Фамилия Имя" autocomplete="name">
+      <input type="text" id="student-class" placeholder="Класс (например: 10А)" autocomplete="off">
+      <button type="button" class="btn btn-primary" onclick="startTest()">▶ Начать тест</button>
+      <p class="hint">Вам выпадет случайный вариант из 3 с равной вероятностью</p>
+    </div>
+  </div>
+
+  <!-- TEST -->
+  <div id="test-screen" class="screen">
+    <div class="info-bar">
+      <span id="variant-label">Вариант: <strong>-</strong></span>
+      <span id="timer">⏱ <span id="time">00:00</span></span>
+    </div>
+    <div id="test-content" class="card"></div>
+    <button type="button" class="btn btn-primary btn-submit" onclick="submitTest()">✓ Завершить и проверить</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="result-screen" class="screen">
+    <div class="card result-card">
+      <h2>📊 Ваш результат</h2>
+      <div id="result-summary"></div>
+      <div id="detailed-results"></div>
+      <div id="send-status" style="margin-top:16px"></div>
+      <button type="button" class="btn btn-secondary" style="margin-top:16px" onclick="location.reload()">↻ Новый ученик</button>
+    </div>
+  </div>
+</div>
+
+<!-- Teacher button -->
+<button type="button" class="btn-teacher" onclick="openTeacherModal()">👨‍🏫 Я учитель</button>
+
+<!-- Teacher modal -->
+<div id="teacher-modal" class="modal-overlay" onclick="if(event.target===this)closeTeacherModal()">
+  <div class="modal">
+    <h2>🔐 Вход для учителя</h2>
+    <input type="password" id="teacher-pass" placeholder="Пароль" onkeydown="if(event.key==='Enter')checkTeacherPass()">
+    <button type="button" class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="checkTeacherPass()">Войти</button>
+    <button type="button" class="btn btn-secondary" style="width:100%" onclick="closeTeacherModal()">Отмена</button>
+  </div>
+</div>
+
+<script>
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmLRg9MYqx8dwFfq6pI2IJc6fcrRZFogDbjpR7uWV1XRWfrQC0KLujcO3yw8ZT-EAD/exec";
+const TEACHER_PASS = "pedagog2024";
+
+const testData = {
+  1: {
+    title: "Вариант 1",
+    tasks: [
+      {
+        type: "matching",
+        question: "Соедините тип библиографической ссылки с её примером. Перетащите элемент слева на нужный пункт справа.",
+        left: [
+          {id:"A", text:"Внутритекстовая"},
+          {id:"B", text:"Подстрочная"},
+          {id:"C", text:"Затекстовая"}
+        ],
+        right: [
+          {id:"1", text:"Иванов И. И. Педагогика. — М.: Наука, 2020. — 200 с."},
+          {id:"2", text:"(Смирнова, 2019, с. 45)"},
+          {id:"3", text:"Там же. — С. 12."}
+        ],
+        correct: {"A":"2","B":"3","C":"1"},
+        score: 3
+      },
+      {
+        type: "buckets",
+        question: "Распределите признаки по группам: плагиат и корректное заимствование. Перетащите каждый признак в нужную группу.",
+        items: ["Отсутствие кавычек при дословном цитировании","Оформление ссылки на источник в квадратных скобках","Изменение нескольких слов в чужом тексте без указания автора","Пересказ своими словами с указанием источника"],
+        buckets: {
+          "Плагиат": ["Отсутствие кавычек при дословном цитировании","Изменение нескольких слов в чужом тексте без указания автора"],
+          "Корректное заимствование": ["Оформление ссылки на источник в квадратных скобках","Пересказ своими словами с указанием источника"]
+        },
+        score: 4
+      },
+      {
+        type: "compare",
+        question: "Дан фрагмент текста ученика и исходный текст из учебника. Определите, есть ли здесь плагиат. Если да, предложите корректный вариант.",
+        source: "Температура кипения воды составляет 100 градусов Цельсия при нормальном атмосферном давлении.",
+        student: "Вода закипает при 100 градусах, если давление нормальное.",
+        correct: ["плагиат","пересказ","слишком близко","указать источник","перефразировать"],
+        score: 3
+      },
+      {
+        type: "rewrite",
+        question: "Перепишите предложение в научном стиле, убрав разговорные выражения:",
+        original: "В этом опыте мы взяли две пробирки и нагрели их, чтобы увидеть, что будет.",
+        correctKeywords: ["экспериментальное","исследование","пробирки","нагревание","наблюдение","изменения","целью"],
+        score: 3
+      },
+      {
+        type: "cloze",
+        question: "Оформите внутритекстовую библиографическую ссылку на источник: Автор: Козлова М. И., Год: 2021, Страница: 58",
+        text: "Согласно исследованию [1] ...",
+        gaps: [
+          {id:1, correct:["(Козлова, 2021, с. 58)"], distractors:["[Козлова, 2021]","Козлова М. И., 2021, с. 58","(Козлова М. И., 2021)"]}
+        ],
+        score: 2
+      }
+    ]
+  },
+  2: {
+    title: "Вариант 2",
+    tasks: [
+      {
+        type: "matching",
+        question: "Соедините элемент библиографического описания с его примером:",
+        left: [
+          {id:"A", text:"Автор(ы)"},
+          {id:"B", text:"Название статьи"},
+          {id:"C", text:"Год издания"},
+          {id:"D", text:"Страницы в журнале"}
+        ],
+        right: [
+          {id:"1", text:"2021"},
+          {id:"2", text:"С. 15–20"},
+          {id:"3", text:"Петров П. П."},
+          {id:"4", text:"Методы активного обучения"}
+        ],
+        correct: {"A":"3","B":"4","C":"1","D":"2"},
+        score: 4
+      },
+      {
+        type: "buckets",
+        question: "Распределите ситуации по группам: явный плагиат и неумышленное заимствование.",
+        items: ["Ученик скопировал абзац из интернета без кавычек и ссылки","Ученик написал своими словами, но забыл указать автора идеи","Ученик оформил цитату кавычками, но не указал номер страницы","Ученик скачал готовую работу и подписал своим именем"],
+        buckets: {
+          "Явный плагиат": ["Ученик скопировал абзац из интернета без кавычек и ссылки","Ученик скачал готовую работу и подписал своим именем"],
+          "Неумышленное заимствование": ["Ученик написал своими словами, но забыл указать автора идеи","Ученик оформил цитату кавычками, но не указал номер страницы"]
+        },
+        score: 4
+      },
+      {
+        type: "compare",
+        question: "Проверьте фрагмент на плагиат. Если он есть, исправьте.",
+        source: "Психологический климат в классе влияет на успеваемость учащихся (Сидорова А. А., 2018, с. 67).",
+        student: "На успеваемость учеников влияет то, какой психологический климат в классе (Сидорова, 2018).",
+        correct: ["нет плагиата","корректная ссылка","перефразировано","ссылка указана"],
+        score: 3
+      },
+      {
+        type: "rewrite",
+        question: "Перепишите предложение в научном стиле:",
+        original: "Мы решили проверить, как соль влияет на скорость замерзания воды.",
+        correctKeywords: ["цель","исследования","влияние","хлорид натрия","кристаллизация","воды","определение"],
+        score: 3
+      },
+      {
+        type: "cloze",
+        question: "Оформите подстрочную ссылку на источник: Автор: Новиков А. А., Название: История педагогики, Город: Санкт-Петербург, Издательство: Питер, Год: 2020, Страница: 134",
+        text: "Согласно исследованию [1] ...",
+        gaps: [
+          {id:1, correct:["¹ Новиков А. А. История педагогики. — СПб.: Питер, 2020. — С. 134."], distractors:["(Новиков, 2020, с. 134)","Новиков А. А., 2020, с. 134","[Новиков, 2020]"]}
+        ],
+        score: 2
+      }
+    ]
+  },
+  3: {
+    title: "Вариант 3",
+    tasks: [
+      {
+        type: "matching",
+        question: "Соедините тип источника с его библиографическим описанием:",
+        left: [
+          {id:"A", text:"Книга с одним автором"},
+          {id:"B", text:"Статья из журнала"},
+          {id:"C", text:"Электронный ресурс"}
+        ],
+        right: [
+          {id:"1", text:"Иванов И. И. Игры в обучении // Журнал педагога. — 2020. — № 2. — С. 22–25."},
+          {id:"2", text:"Учитель и ученик. — Режим доступа: http://uchitel.ru (дата обращения: 10.06.2026)"},
+          {id:"3", text:"Смирнов С. С. Педагогика. — М.: Наука, 2019. — 300 с."}
+        ],
+        correct: {"A":"3","B":"1","C":"2"},
+        score: 3
+      },
+      {
+        type: "buckets",
+        question: "Распределите действия по группам: требует ссылки на источник и не требует ссылки.",
+        items: ["Пересказ чужой идеи своими словами","Написание общеизвестного факта (Земля вращается вокруг Солнца)","Дословное цитирование двух предложений","Собственный вывод на основе проведённого эксперимента"],
+        buckets: {
+          "Требует ссылки": ["Пересказ чужой идеи своими словами","Дословное цитирование двух предложений"],
+          "Не требует ссылки": ["Написание общеизвестного факта (Земля вращается вокруг Солнца)","Собственный вывод на основе проведённого эксперимента"]
+        },
+        score: 4
+      },
+      {
+        type: "compare",
+        question: "Найдите плагиат в тексте ученика. Предложите отредактированный вариант.",
+        source: "Фотосинтез — это процесс, при котором растения используют солнечную энергию для превращения углекислого газа и воды в глюкозу и кислород.",
+        student: "Фотосинтез — это такой процесс, где растения берут солнечную энергию, чтобы превращать углекислый газ и воду в глюкозу и кислород.",
+        correct: ["плагиат","почти дословно","без кавычек","без ссылки","перефразировать","указать источник"],
+        score: 3
+      },
+      {
+        type: "rewrite",
+        question: "Перепишите предложение в научном стиле:",
+        original: "Опыт показал, что чем больше света, тем быстрее растут ростки.",
+        correctKeywords: ["результаты","эксперимента","зависимость","скорость роста","побегов","освещённость","свидетельствуют"],
+        score: 3
+      },
+      {
+        type: "cloze",
+        question: "Оформите затекстовую ссылку на источник №7 из списка литературы. Автор: Морозов В. П., Название: Психология творчества, Город: Москва, Издательство: Академия, Год: 2019, Страниц: 180, Страница: 23",
+        text: "Согласно исследованию [1] ...",
+        gaps: [
+          {id:1, correct:["[7, с. 23]"], distractors:["(Морозов, 2019, с. 23)","Морозов В. П., 2019, с. 23","[Морозов, с. 23]"]}
+        ],
+        score: 2
+      }
+    ]
+  }
+};
+
+var currentVariant = null;
+var studentData = {name:'', class:''};
+var startTime = null;
+var timerInterval = null;
+var dragSrcEl = null;
+var userAnswers = {};
+
+// ===== TEACHER MODAL =====
+function openTeacherModal() {
+  document.getElementById('teacher-modal').classList.add('active');
+  document.getElementById('teacher-pass').value = '';
+  document.getElementById('teacher-pass').focus();
+}
+
+function closeTeacherModal() {
+  document.getElementById('teacher-modal').classList.remove('active');
+}
+
+function checkTeacherPass() {
+  var pass = document.getElementById('teacher-pass').value;
+  if (pass === TEACHER_PASS) {
+    window.location.href = 'teacher.html';
+  } else {
+    alert('Неверный пароль!');
+    document.getElementById('teacher-pass').value = '';
+    document.getElementById('teacher-pass').focus();
+  }
+}
+
+// ===== TEST =====
+function startTest() {
+  var name = document.getElementById('student-name').value.trim();
+  var cls = document.getElementById('student-class').value.trim();
+  if (!name || !cls) { alert('Пожалуйста, заполните все поля!'); return; }
+  studentData = {name: name, class: cls};
+  currentVariant = Math.floor(Math.random() * 3) + 1;
+
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('test-screen').classList.add('active');
+
+  var v = currentVariant;
+  document.getElementById('variant-label').innerHTML =
+    'Вариант: <span class="variant-badge v' + v + '">' + v + '</span>';
+
+  renderTest();
+  startTimer();
+}
+
+function renderTest() {
+  var container = document.getElementById('test-content');
+  var variant = testData[currentVariant];
+  var html = '<h2>' + variant.title + '</h2>';
+
+  variant.tasks.forEach(function(task, i) {
+    html += '<div class="task" data-idx="' + i + '">';
+    html += '<div class="task-header">';
+    html += '<div class="task-num">' + (i+1) + '</div>';
+    html += '<div><div class="task-type">Задание ' + (i+1) + '</div>';
+    html += '<p>' + task.question + '</p></div></div>';
+
+    if (task.type === 'matching') html += renderMatching(task, i);
+    else if (task.type === 'buckets') html += renderBuckets(task, i);
+    else if (task.type === 'compare') html += renderCompare(task, i);
+    else if (task.type === 'rewrite') html += renderRewrite(task, i);
+    else if (task.type === 'cloze') html += renderCloze(task, i);
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+  initDragDrop();
+}
+
+function renderMatching(task, idx) {
+  var html = '<div class="matching-game">';
+  html += '<div class="match-col">';
+  task.left.forEach(function(item) {
+    html += '<div class="match-item" draggable="true" data-id="' + item.id + '" data-task="' + idx + '">';
+    html += '<strong>' + item.id + '.</strong> ' + item.text;
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="match-arrows">';
+  for (var i = 0; i < task.left.length; i++) {
+    html += '<div class="arrow-box">→</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="match-col">';
+  task.right.forEach(function(item) {
+    html += '<div class="match-dropzone" data-target="' + item.id + '" data-task="' + idx + '">';
+    html += '<span class="drop-label">' + item.id + '. ' + item.text + '</span>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+  return html;
+}
+
+function renderBuckets(task, idx) {
+  var html = '<div class="source-items" id="source-' + idx + '">';
+  task.items.forEach(function(item) {
+    html += '<div class="bucket-item" draggable="true" data-val="' + item + '" data-task="' + idx + '">' + item + '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="buckets-grid">';
+  Object.keys(task.buckets).forEach(function(name) {
+    html += '<div class="bucket" data-bucket="' + name + '" data-task="' + idx + '">';
+    html += '<div class="bucket-header">📦 ' + name + '</div>';
+    html += '<div class="bucket-items"></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderCompare(task, idx) {
+  var html = '<div class="compare-box">';
+  html += '<div class="compare-block source">';
+  html += '<div class="label">📖 Исходный текст</div>';
+  html += task.source;
+  html += '</div>';
+  html += '<div class="compare-block student">';
+  html += '<div class="label">✏️ Текст ученика</div>';
+  html += task.student;
+  html += '</div>';
+  html += '</div>';
+  html += '<p style="color:var(--text-dim);font-size:14px;margin:12px 0">Напишите свой ответ:</p>';
+  html += '<textarea id="compare-' + idx + '" placeholder="Есть ли плагиат? Предложите корректный вариант..."></textarea>';
+  return html;
+}
+
+function renderRewrite(task, idx) {
+  var html = '<div class="compare-box">';
+  html += '<div class="compare-block student">';
+  html += '<div class="label">✏️ Исходное предложение</div>';
+  html += '<em>' + task.original + '</em>';
+  html += '</div>';
+  html += '</div>';
+  html += '<p style="color:var(--text-dim);font-size:14px;margin:12px 0">Перепишите в научном стиле:</p>';
+  html += '<textarea id="rewrite-' + idx + '" placeholder="Ваш вариант в научном стиле..."></textarea>';
+  return html;
+}
+
+function renderCloze(task, idx) {
+  var html = '<div class="cloze-text">';
+  var text = task.text;
+  task.gaps.forEach(function(gap) {
+    var opts = gap.correct.concat(gap.distractors).sort(function() { return Math.random() - 0.5; });
+    var sel = '<select id="gap-' + idx + '-' + gap.id + '" class="cloze-select">';
+    sel += '<option value="">— выберите —</option>';
+    opts.forEach(function(o) { sel += '<option value="' + o + '">' + o + '</option>'; });
+    sel += '</select>';
+    text = text.replace('[' + gap.id + ']', sel);
+  });
+  html += text + '</div>';
+  return html;
+}
+
+// ===== DRAG & DROP =====
+function initDragDrop() {
+  document.querySelectorAll('.match-item, .bucket-item').forEach(function(el) {
+    el.addEventListener('dragstart', handleDragStart);
+    el.addEventListener('dragend', handleDragEnd);
+  });
+  document.querySelectorAll('.match-dropzone, .bucket').forEach(function(el) {
+    el.addEventListener('dragover', handleDragOver);
+    el.addEventListener('dragenter', handleDragEnter);
+    el.addEventListener('dragleave', handleDragLeave);
+    el.addEventListener('drop', handleDrop);
+  });
+}
+
+function handleDragStart(e) {
+  dragSrcEl = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', this.dataset.id || this.dataset.val);
+}
+function handleDragEnd(e) { this.classList.remove('dragging'); }
+function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+function handleDragEnter(e) { this.classList.add('drag-over'); }
+function handleDragLeave(e) { this.classList.remove('drag-over'); }
+
+function handleDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  var data = e.dataTransfer.getData('text/plain');
+  if (!dragSrcEl) return;
+
+  if (this.classList.contains('match-dropzone')) {
+    var taskIdx = this.dataset.task;
+    if (!userAnswers[taskIdx]) userAnswers[taskIdx] = {};
+    userAnswers[taskIdx][data] = this.dataset.target;
+    this.innerHTML = '<span class="drop-value">' + data + ' → ' + this.dataset.target + '</span>';
+    this.classList.add('filled');
+    dragSrcEl.style.opacity = '0.3';
+    dragSrcEl.draggable = false;
+  }
+  else if (this.classList.contains('bucket')) {
+    var taskIdx = this.dataset.task;
+    var val = dragSrcEl.dataset.val;
+    if (!userAnswers[taskIdx]) userAnswers[taskIdx] = {};
+    if (!userAnswers[taskIdx][this.dataset.bucket]) userAnswers[taskIdx][this.dataset.bucket] = [];
+    userAnswers[taskIdx][this.dataset.bucket].push(val);
+    var chip = document.createElement('div');
+    chip.className = 'bucket-item';
+    chip.textContent = val;
+    chip.draggable = false;
+    this.querySelector('.bucket-items').appendChild(chip);
+    dragSrcEl.remove();
+  }
+}
+
+// ===== TIMER =====
+function startTimer() {
+  startTime = Date.now();
+  timerInterval = setInterval(function() {
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    var m = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    var s = (elapsed % 60).toString().padStart(2, '0');
+    document.getElementById('time').textContent = m + ':' + s;
+  }, 1000);
+}
+
+// ===== SUBMIT =====
+function submitTest() {
+  clearInterval(timerInterval);
+  var timeSpent = document.getElementById('time').textContent;
+  var variant = testData[currentVariant];
+  var totalScore = 0;
+  var maxScore = 0;
+  var answers = [];
+
+  variant.tasks.forEach(function(task, i) {
+    var score = 0;
+    var correct = false;
+    var wrongItems = [];
+
+    if (task.type === 'matching') {
+      var ua = userAnswers[i] || {};
+      var matches = 0;
+      Object.keys(task.correct).forEach(function(k) {
+        if (ua[k] === task.correct[k]) {
+          matches++;
+        } else if (ua[k]) {
+          wrongItems.push(k + '→' + ua[k] + ' (нужно: ' + task.correct[k] + ')');
+        }
+      });
+      score = matches;
+      correct = matches === Object.keys(task.correct).length;
+    }
+    else if (task.type === 'buckets') {
+      var ua = userAnswers[i] || {};
+      var allCorrect = true;
+      var pts = 0;
+      Object.keys(task.buckets).forEach(function(bucket) {
+        var userItems = (ua[bucket] || []).map(function(s) { return s.toLowerCase(); });
+        var correctItems = task.buckets[bucket].map(function(s) { return s.toLowerCase(); });
+        var ok = userItems.length === correctItems.length && userItems.every(function(it) {
+          return correctItems.indexOf(it) !== -1;
+        });
+        if (ok) {
+          pts += correctItems.length;
+        } else {
+          allCorrect = false;
+          var missing = correctItems.filter(function(c) { return userItems.indexOf(c) === -1; });
+          var extra = userItems.filter(function(u) { return correctItems.indexOf(u) === -1; });
+          if (missing.length) wrongItems.push(bucket + ': не хватает «' + missing.join(', ') + '»');
+          if (extra.length) wrongItems.push(bucket + ': лишние «' + extra.join(', ') + '»');
+        }
+      });
+      score = pts;
+      correct = allCorrect;
+    }
+    else if (task.type === 'compare') {
+      var text = document.getElementById('compare-' + i).value.toLowerCase();
+      var found = 0;
+      task.correct.forEach(function(kw) {
+        if (text.indexOf(kw.toLowerCase()) !== -1) found++;
+      });
+      score = Math.min(found, task.score);
+      correct = found >= Math.ceil(task.correct.length * 0.5);
+      if (!correct) {
+        wrongItems.push('В ответе ожидались ключевые слова: ' + task.correct.join(', '));
+      }
+    }
+    else if (task.type === 'rewrite') {
+      var text = document.getElementById('rewrite-' + i).value.toLowerCase();
+      var found = 0;
+      task.correctKeywords.forEach(function(kw) {
+        if (text.indexOf(kw.toLowerCase()) !== -1) found++;
+      });
+      score = Math.min(found, task.score);
+      correct = found >= Math.ceil(task.correctKeywords.length * 0.5);
+      if (!correct) {
+        wrongItems.push('В научном стиле ожидались слова: ' + task.correctKeywords.slice(0, 4).join(', ') + '...');
+      }
+    }
+    else if (task.type === 'cloze') {
+      var filled = 0;
+      task.gaps.forEach(function(gap) {
+        var sel = document.getElementById('gap-' + i + '-' + gap.id).value;
+        if (gap.correct.indexOf(sel) !== -1) {
+          filled++;
+        } else if (sel) {
+          wrongItems.push('[' + gap.id + ']: «' + sel + '» (нужно: ' + gap.correct[0] + ')');
+        }
+      });
+      score = filled;
+      correct = filled === task.gaps.length;
+    }
+
+    totalScore += score;
+    maxScore += task.score;
+    answers.push({score: score, maxScore: task.score, correct: correct, type: task.type, wrongItems: wrongItems});
+  });
+
+  var percentage = Math.round((totalScore / maxScore) * 100);
+  var result = {
+    name: studentData.name,
+    class: studentData.class,
+    variant: currentVariant,
+    timestamp: new Date().toLocaleString('ru-RU'),
+    totalScore: totalScore,
+    maxScore: maxScore,
+    percentage: percentage,
+    timeSpent: timeSpent,
+    wrongItems: answers.flatMap(function(a) { return a.wrongItems; }).join('; ') || 'Нет ошибок'
+  };
+
+  sendToSheet(result);
+  showResults(result, answers, variant);
+}
+
+function sendToSheet(result) {
+  var el = document.getElementById('send-status');
+  el.innerHTML = '<p style="color:var(--text-dim)">⏳ Отправка результатов...</p>';
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(result)
+  }).then(function() {
+    el.innerHTML = '<p style="color:var(--success)">✅ Результаты сохранены в таблице</p>';
+  }).catch(function() {
+    el.innerHTML = '<p style="color:var(--danger)">⚠️ Ошибка отправки. Сделайте скриншот!</p>';
+  });
+}
+
+function showResults(result, answers, variant) {
+  document.getElementById('test-screen').classList.remove('active');
+  document.getElementById('result-screen').classList.add('active');
+
+  var colorHex = result.percentage >= 70 ? '#10b981' : result.percentage >= 40 ? '#f59e0b' : '#ef4444';
+
+  document.getElementById('result-summary').innerHTML =
+    '<div class="score-ring" style="--pct:' + result.percentage + '%;border-color:' + colorHex + '">' +
+    '<span class="score-num">' + result.percentage + '%</span>' +
+    '<span class="score-label">' + result.totalScore + ' / ' + result.maxScore + '</span>' +
+    '</div>' +
+    '<p style="color:var(--text-dim)">Вариант ' + result.variant + ' • ' + result.timeSpent + '</p>';
+
+  var html = '<h3 style="margin-top:24px">Разбор ошибок</h3>';
+  answers.forEach(function(a, i) {
+    html += '<div class="task-result ' + (a.correct ? 'ok' : 'err') + '">';
+    html += '<div class="task-result-title">' + (a.correct ? '✅' : '❌') + ' Задание ' + (i+1) + ': ' + a.score + '/' + a.maxScore + ' баллов</div>';
+    if (!a.correct && a.wrongItems.length) {
+      html += '<div class="task-result-err">';
+      a.wrongItems.forEach(function(err) { html += '• ' + err + '<br>'; });
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+  document.getElementById('detailed-results').innerHTML = html;
+}
+</script>
+</body>
+</html>
